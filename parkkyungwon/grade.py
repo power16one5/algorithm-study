@@ -31,7 +31,7 @@ def grade(code_path, input_path, output_path):
     else:
         for i, a, b in zip(count(start=1), code_output.splitlines(), fout.splitlines()):
             if a != b:
-                print(f'line num: {i}', f'expected: {a}', f'output: {b}', sep='\n')
+                print(f'line num: {i}', f'expected: {b}', f'output: {a}', sep='\n')
                 break
         
         else:
