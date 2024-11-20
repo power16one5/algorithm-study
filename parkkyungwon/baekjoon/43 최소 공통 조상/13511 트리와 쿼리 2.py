@@ -33,10 +33,11 @@ def get_dps():
 
 
 def move(a, distance):
-    for i in range(distance.bit_length()):
-        if (distance >> i) & 1:
-            a = sparse_dp[i][a][0]
-    
+    while distance:
+        bit = distance & -distance
+        a = sparse_dp[bit.bit_length() - 1][a][0]
+        distance ^= bit
+
     return a
 
 
@@ -47,11 +48,13 @@ def query1(a, b):
         if ad < bd: a, b, ad, bd = b, a, bd, ad
         gap = ad - bd
 
-        for i in range(gap.bit_length()):
-            if (gap >> i) & 1:
-                total += sparse_dp[i][a][1]
-                a = sparse_dp[i][a][0]
-    
+        while gap:
+            bit = gap & -gap
+            i = bit.bit_length() - 1
+            total += sparse_dp[i][a][1]
+            a = sparse_dp[i][a][0]
+            gap ^= bit
+
     if a != b:    
         for i in range(SPARSE_LENG-1, -1, -1):
             if sparse_dp[i][a][0] != sparse_dp[i][b][0]:
