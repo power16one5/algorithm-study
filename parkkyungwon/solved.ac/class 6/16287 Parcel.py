@@ -1,19 +1,19 @@
-def sol(w, arr):
-    dp = {}
-    w2 = w // 2
+def sol(w, n, arr):
+    dp = [None] * 400000
+    half = w // 2
 
-    for i in range(N):
-        for j in range(i + 1, N):
+    for i in range(n):
+        for j in range(i + 1, n):
             v = arr[i] + arr[j]
 
-            if v < w2:
-                if v not in dp: 
+            if v < half:
+                if not dp[v]: 
                     dp[v] = [i, j]
     
             else:
                 v = w - v
 
-                if v > 0 and v in dp:
+                if v > 0 and dp[v]:
                     a, b = dp[v]
 
                     if i != a and i != b and j != a and j != b:
@@ -25,4 +25,4 @@ def sol(w, arr):
 W, N = map(int, input().split())
 arr = tuple(sorted(map(int, input().split())))
 
-print(sol(W, arr))
+print(sol(W, N, arr))
