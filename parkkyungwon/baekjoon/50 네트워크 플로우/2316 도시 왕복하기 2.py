@@ -60,7 +60,7 @@ class Dinic():
             self.graph_iter = tuple(iter(self.graph[i]) for i in range(self.size))
 
             while True:
-                cost = self.dfs(self.source, self.sink)
+                cost = self.dfs(self.source, INF)
                 if not cost: break
 
                 total += cost
@@ -85,5 +85,7 @@ def main():
 
     print(mf.max_flow(source, sink))
 
+
+INF = float('inf')
 
 main()
