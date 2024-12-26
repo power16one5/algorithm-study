@@ -6,12 +6,11 @@ class Edge():
 
 
 class Dinic():
-    __slots__ = ['graph', 'graph_iter', 'node_cap', 'level', 'size', 'source', 'sink']
+    __slots__ = ['graph', 'graph_iter', 'level', 'size', 'source', 'sink']
 
     def __init__(self, n):
         self.size = n
         self.graph = tuple([] for _ in range(self.size))
-        self.node_cap = [1] * self.size
     
     def add_edge(self, u, v):
         fw, bw = Edge(v, 1), Edge(u, 0)
