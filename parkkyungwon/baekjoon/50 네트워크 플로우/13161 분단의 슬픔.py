@@ -1,40 +1,65 @@
 class Dinic():
-    __slots__ = ['graph', 'work', 'capacity', 'level', 'size', 'source', 'sink']
+    __slots__ = ['fw_graph', 'bw_graph', 'graph_length', 'work', 'capacity', 'level', 'size', 'source', 'sink']
 
     def __init__(self, n):
         self.size = n
-        self.graph = [[] for _ in range(self.size)]
+        self.graph_length = [0] * self.size
+        self.fw_graph = [[] for _ in range(self.size)]
+        self.bw_graph = [[] for _ in range(self.size)]
         self.capacity = [[0] * self.size for _ in range(self.size)]
     
     def add_edge(self, u, v, cap):
-        self.graph[u].append(v)
+        self.fw_graph[u].append(v)
+        self.bw_graph[v].append(u)
         self.capacity[u][v] += cap
+        self.graph_length[u] += 1
 
     def bfs(self):
-        self.level = [-1] * self.size
+        self.level = [None] * self.size
         self.level[self.source] = 0
-        queue = [self.source]
+        self.level[self.sink] = self.size
+        fw_queue = [self.source]
+        bw_queue = [self.sink]
 
-        for u in queue:
-            next_level = self.level[u] + 1
-            cap = self.capacity[u]
+        while fw_queue and bw_queue:
+            # 정방향
+            next_fw_queue = []
+            next_level = self.level[fw_queue[0]] + 1
+            for u in fw_queue:
+                for v in self.fw_graph[u]:
+                    if self.capacity[u][v] > 0:
+                        if self.level[v] is None:
+                            self.level[v] = next_level
+                            next_fw_queue.append(v)
 
-            for v in self.graph[u]:
-                if cap[v] > 0 and self.level[v] < 0:
-                    self.level[v] = next_level
-                    queue.append(v)
+                        elif self.level[v] > next_level: return True
 
-        return self.level[self.sink] > -1
+            fw_queue = next_fw_queue
+            
+            # 역방향
+            next_bw_queue = []
+            next_level = self.level[bw_queue[0]] - 1
+            for v in bw_queue:
+                for u in self.bw_graph[v]:
+                    if self.capacity[u][v] > 0:
+                        if self.level[u] is None:
+                            self.level[u] = next_level
+                            next_bw_queue.append(u)
+
+                        elif self.level[u] < next_level: return True
+
+            bw_queue = next_bw_queue
+
+        return False
     
     def dfs(self, u, upto):
         if u == self.sink: return upto
         cap = self.capacity[u]
-        next_level = self.level[u] + 1    
 
-        for i in range(self.work[u], len(self.graph[u])):
-            v = self.graph[u][i]
+        for i in range(self.work[u], self.graph_length[u]):
+            v = self.fw_graph[u][i]
 
-            if cap[v] > 0 and next_level == self.level[v]:
+            if cap[v] > 0 and (self.level[v] is not None) and self.level[u] < self.level[v]:
                 cost = self.dfs(v, upto if upto < cap[v] else cap[v])
 
                 if cost > 0:
@@ -64,7 +89,7 @@ class Dinic():
         visit[source] = 1
 
         for u in queue:
-            for v in self.graph[u]:
+            for v in self.fw_graph[u]:
                 if not visit[v] and self.capacity[u][v]: 
                     queue.append(v)
                     visit[v] = 1
