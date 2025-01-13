@@ -1,0 +1,87 @@
+from cmath import exp, pi
+import sys
+
+
+
+def sieve(leng):
+    sqrt = int(leng ** 0.5)
+    arr = [1] * leng
+    arr[:2] = 0, 0
+
+    for i in range(2, sqrt + 1):
+        if arr[i]:
+            for j in range(i + i, leng, i):
+                arr[j] = 0
+    
+    return arr
+
+
+def reverse_bit(leng):
+    reverse_arr = [i for i in range(leng)]
+    half, j = leng >> 1, 0
+
+    for i in range(1, leng):
+        bit = half
+        while j >= bit:
+            j -= bit
+            bit >>= 1
+        j += bit
+        if i < j: reverse_arr[i], reverse_arr[j] = reverse_arr[j], reverse_arr[i]
+    
+    def func(arr):
+        for i, j in enumerate(reverse_arr):
+            if i < j: arr[i], arr[j] = arr[j], arr[i]
+    
+    return func
+            
+
+def fft(arr, rev_func, inv=False):
+    leng = len(arr)
+    rev_func(arr)
+    size, half = 2, 1
+    two_pi = 2 * pi * (1 if inv else -1)
+
+    while size <= leng:
+        w = exp(complex(0, two_pi / size))
+
+        for i in range(0, leng, size):
+            pow_w = 1
+
+            for j in range(i, i + half):
+                k = j + half
+                a, b = arr[j], arr[k] * pow_w
+                arr[j] = a + b
+                arr[k] = a - b
+                pow_w *= w
+        
+        half, size = size, size << 1
+    
+    if inv: 
+        for i in range(leng): arr[i] /= leng
+
+
+def main():
+    readline = sys.stdin.readline
+    write = sys.stdout.write
+
+    prime_leng = int(1e6) + 1
+    A = sieve(prime_leng)
+    leng = 1 << (prime_leng << 1).bit_length()
+    A += [0] * (leng - prime_leng)
+
+    B = [0] * leng
+    for i in range(prime_leng >> 1):
+        if A[i]: B[i << 1] = 1
+
+    rev_func = reverse_bit(leng)
+    fft(A, rev_func), fft(B, rev_func)
+    for i in range(leng): A[i] *= B[i]
+    fft(A, rev_func, True)
+
+    T = int(readline())
+    for _ in range(T):
+        N = int(readline())
+        write(str(round(A[N].real)) + '\n')
+
+
+main()
