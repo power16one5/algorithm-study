@@ -8,15 +8,17 @@ def build_sa(string):
         keys = [(rank[i] << 19) + (rank[j] if (j := i + k) < leng else 0) for i in range(leng)]
         sa.sort(key=lambda i: keys[i])
         
+        count = 1
         next_rank = [1] * leng
         it = iter(sa)
         prev = next(it)
 
         for curr in it:
-            next_rank[curr] = next_rank[prev] + (keys[curr] != keys[prev])
+            if keys[curr] != keys[prev]: count += 1
+            next_rank[curr] = count
             prev = curr
         
-        if next_rank[sa[-1]] == leng: break
+        if count == leng: break
 
         rank = next_rank
         k <<= 1
