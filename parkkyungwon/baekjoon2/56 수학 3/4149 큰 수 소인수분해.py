@@ -12,23 +12,20 @@ def get_gcd(a, b):
 
 def pollard_rho(n):
     if not n & 1: return 2
-
-    c, gcd = 0, 1
-    f = lambda x: (x * x + c) % n
-    f_sq = lambda x: f(f(x))
-
+    
+    t, h, gcd = 0, 0, 1
     while True:
-        c += 1
-        t, h = 0, 0
+        c = random.randint(1, n - 1)
 
         while gcd == 1:
-            t, h = f(t), f_sq(h)
-            if t == h: break
+            t = (t * t + c) % n
+            h = (h * h + c) % n
+            h = (h * h + c) % n
             gcd = get_gcd(t - h if t > h else h - t, n)
         
+        if gcd == n: gcd = 1
         else: return gcd
     
-
 
 def millar_rabin(n, k=5):
     if n < 2: return False
