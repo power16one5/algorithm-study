@@ -14,18 +14,18 @@ def pollard_rho(n):
     if not n & 1: return 2
     
     t, h, gcd = 0, 0, 1
+    f = lambda x: (x * x + c) % n
+    
     while True:
         c = random.randint(1, n - 1)
 
         while gcd == 1:
-            t = (t * t + c) % n
-            h = (h * h + c) % n
-            h = (h * h + c) % n
-            gcd = get_gcd(t - h if t > h else h - t, n)
+            t, h = f(t), f(f(h))
+            gcd = get_gcd(t - h, n)
         
         if gcd == n: gcd = 1
         else: return gcd
-    
+
 
 def millar_rabin(n, k=5):
     if n < 2: return False
