@@ -1,5 +1,4 @@
 import random
-import sys
 
 
 
@@ -16,9 +15,7 @@ def pollard_rho(n):
     t, h, gcd = 0, 0, 1
     f = lambda x: (x * x + c) % n
     
-    while True:
-        c = random.randint(1, n - 1)
-
+    for c in range(1, n):
         while gcd == 1:
             t, h = f(t), f(f(h))
             gcd = get_gcd(t - h, n)
@@ -76,8 +73,6 @@ def find_factor(n):
 
 
 def main():
-    global write
-    write = sys.stdout.write
     n = int(input())
 
     print(*find_factor(n), sep='\n')
