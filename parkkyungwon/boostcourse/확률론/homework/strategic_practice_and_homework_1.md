@@ -88,25 +88,24 @@ $$
 
 #### 분모
 
-$n$ 길이는 $n!$, $n - 1$개 길이는 $\frac {n!} {2!}$이다. \
-$1$ 부터 $n$개 모두 더하면 
+$n$ 길이는 $\frac {n!} {0!}$, $n - 1$개 길이도 $\frac {n!} {1!}$이다.
 
 $$
-\frac {n!} {1!} + \frac {n!} {2!} + \cdots \frac {n!} {(n - 1)!} \\[1em]
-= n! \left ( \frac {1} {1!} + \frac {1} {2!} + \cdots \frac {1} {(n - 1)!} \right ) \\[1em]
+\frac {n!} {0!} + \frac {n!} {1!} + \cdots \frac {n!} {(n - 1)!} \\[1em]
+= n! \left ( \frac {1} {0!} + \frac {1} {1!} + \cdots \frac {1} {(n - 1)!} \right ) \\[1em]
 $$
 
 #### 결과
 
 $$
 \frac {n!} {n! \left ( \frac {1} {1!} + \frac {1} {2!} + \cdots \frac {1} {(n - 1)!} \right )} \\[1em]
-= \frac {1} {\frac {1} {1!} + \frac {1} {2!} + \cdots \frac {1} {(n - 1)!}} \\[1em]
+= \frac {1} {\frac {1} {0!} + \frac {1} {1!} + \cdots \frac {1} {(n - 1)!}} \\[1em]
 $$
 
-이후 분모는 $n$이 커질수록 $e - 1$으로 수렴하므로
+이후 분모는 $n$이 커질수록 $e$로 수렴하므로
 
 $$
-\approx \frac {1} {(e - 1)} \\[1em]
+\approx \boxed {\frac {1} {e}} \\[1em]
 $$
 
 ## 2. 이야기 증명
